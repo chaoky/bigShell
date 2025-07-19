@@ -9,12 +9,17 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        bigShell = attrs: import ./bigShell.nix attrs;
       in
       {
         formatter = pkgs.nixfmt-tree;
-        devShell = import ./bigShell.nix {
+        devShell = bigShell {
           inherit pkgs;
-          shell = "fish";
+          shell = "bash";
+        };
+        packages = {
+          inherit bigShell;
+          mkShell = bigShell;
         };
       }
     );
