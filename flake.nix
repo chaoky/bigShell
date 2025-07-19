@@ -18,7 +18,7 @@
           shell = "bash";
         };
         packages = {
-          inherit bigShell;
+          default = bigShell;
           mkShell = bigShell;
         };
       }
