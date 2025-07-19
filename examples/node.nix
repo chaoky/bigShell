@@ -5,7 +5,12 @@
     bigShell = "";
   };
   outputs =
-    { utils, nixpkgs, bigShell, ... }:
+    {
+      utils,
+      nixpkgs,
+      bigShell,
+      ...
+    }:
     utils.lib.eachDefaultSystem (
       system:
       let

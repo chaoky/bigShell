@@ -1,12 +1,18 @@
 {
   pkgs,
-  shellHook ? "",
   buildInputs ? [ ],
+  shellHook ? "",
   shell ? "bash",
   ...
 }@attrs:
 
 let
+  input = builtins.removeAttrs attrs [
+    "pkgs"
+    "buildInputs"
+    "shellHook"
+    "shell"
+  ];
   userShell = builtins.baseNameOf (builtins.getEnv "SHELL");
   shellName = if shell == "auto" then userShell else shell;
   wrapped = pkgs.writeShellScriptBin shellName (
@@ -28,4 +34,4 @@ let
   };
 in
 
-pkgs.mkShell (attrs // override)
+pkgs.mkShell (input // override)
