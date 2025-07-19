@@ -2,7 +2,7 @@
   inputs = {
     utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    bigShell = "";
+    bigShell.url = "github:chaoky/bigShell";
   };
   outputs =
     {
@@ -23,7 +23,7 @@
       in
       {
         formatter = pkgs.nixfmt-tree;
-        devShell = bigShell {
+        devShell = bigShell.mkShell {
           inherit pkgs;
           shell = "fish";
           buildInputs = with pkgs; [
