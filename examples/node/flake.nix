@@ -31,7 +31,7 @@
             direnv
           ];
           shellHook = {
-            hook = ''
+            default = ''
               # echo "using $SHELL_NAME"
             '';
             bash = ''

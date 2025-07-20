@@ -48,7 +48,7 @@ Bring your shell of choice to `mkShell` with a simple wrapper
     shell = "fish";
     buildInputs = with pkgs; [ fnm ];
     shellHook = {
-      hook = ''
+      default = ''
         if [ $SHELL_NAME == "fish" ]; then
           echo "using fish"
         fi
