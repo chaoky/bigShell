@@ -3,24 +3,28 @@
     utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
+
   outputs =
     { nixpkgs, utils, ... }:
-    utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-        bigShell = attrs: import ./bigShell.nix attrs;
-      in
-      {
-        formatter = pkgs.nixfmt-tree;
-        devShell = bigShell {
-          inherit pkgs;
-          shell = "bash";
-        };
-        lib = {
-          default = bigShell;
-          mkShell = bigShell;
-        };
-      }
-    );
+    let
+      bigShell = attrs: import ./bigShell.nix attrs;
+      dev = utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          formatter = pkgs.nixfmt-tree;
+          devShell = bigShell {
+            inherit pkgs;
+            shell = "bash";
+          };
+
+        }
+      );
+    in
+    dev
+    // {
+      mkShell = bigShell;
+       };
 }
