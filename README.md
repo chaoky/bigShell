@@ -4,6 +4,8 @@ Bring your shell of choice to `mkShell` with a simple wrapper
 
 ## Basic Example
 
+Edit `flake.nix`
+
 ```nix
 {
   inputs = {
@@ -36,6 +38,12 @@ Bring your shell of choice to `mkShell` with a simple wrapper
       }
     );
 }
+```
+
+Enter the shell
+
+```bash
+nix develop --impure
 ```
 
 ## Advanced Example
@@ -72,3 +80,22 @@ Bring your shell of choice to `mkShell` with a simple wrapper
 `direnv` only exports and clears environment variables,
 it'll not work for more advanced shell features like in the example above,
 I still use `direnv` to manage my secrets and environment variables
+
+### auto enter shell
+
+Add something similar to this `zsh` script to your shell init file
+to automatically enter the development environment
+
+```sh
+# auto nix develop
+nix_flake_cd() {
+  if [[ -f "flake.nix" && -z "$NIX_SHELL_LEVEL" ]]; then
+    export NIX_SHELL_LEVEL=1
+    nix develop
+    export NIX_SHELL_LEVEL=
+  fi
+}
+
+autoload -U add-zsh-hook
+add-zsh-hook chpwd nix_flake_cd && nix_flake_cd
+```
