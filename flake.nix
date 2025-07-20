@@ -19,12 +19,17 @@
             inherit pkgs;
             shell = "bash";
           };
-
         }
       );
     in
     dev
     // {
       mkShell = bigShell;
-       };
+      templates = {
+        node = {
+          path = ./examples/node;
+          description = "Nodejs with a version manager";
+        };
+      };
+    };
 }
