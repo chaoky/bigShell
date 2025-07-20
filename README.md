@@ -55,22 +55,18 @@ nix develop --impure
     inherit pkgs;
     shell = "fish";
     buildInputs = with pkgs; [ fnm ];
-    shellHook = {
-      default = ''
-        if [ $SHELL_NAME == "fish" ]; then
-          echo "using fish"
-        fi
-      '';
-      bash = ''
-        eval "$(fnm env --use-on-cd --shell bash)"
-      '';
-      zsh = ''
-        eval "$(fnm env --use-on-cd --shell zsh)"
-      '';
-      fish = ''
-        fnm env --use-on-cd --shell fish | source
-      '';
-    };
+    shellHook = ''
+      echo "using $SHELL_NAME"
+    '';
+    bashHook = ''
+      eval "$(fnm env --use-on-cd --shell bash)"
+    '';
+    zshHook = ''
+      eval "$(fnm env --use-on-cd --shell zsh)"
+    '';
+    fishHook = ''
+      fnm env --use-on-cd --shell fish | source
+    '';
   };
 }
 ```
@@ -91,7 +87,7 @@ to automatically enter the development environment
 nix_flake_cd() {
   if [[ -f "flake.nix" && -z "$NIX_SHELL_LEVEL" ]]; then
     export NIX_SHELL_LEVEL=1
-    nix develop
+    nix develop --impure
     export NIX_SHELL_LEVEL=
   fi
 }

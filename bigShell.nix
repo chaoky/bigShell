@@ -1,7 +1,9 @@
 {
   pkgs,
-  buildInputs ? [ ],
   shellHook ? "",
+  fishHook ? "",
+  bashHook ? "",
+  zshHook ? "",
   shell ? "bash",
   ...
 }@attrs:
@@ -9,40 +11,39 @@
 let
   input = builtins.removeAttrs attrs [
     "pkgs"
-    "buildInputs"
     "shellHook"
+    "fishHook"
+    "bashHook"
+    "zshHook"
     "shell"
   ];
-  userShell = builtins.baseNameOf (builtins.getEnv "SHELL");
-  shellName = if shell == "auto" then userShell else shell;
-
-  defaultHook = if builtins.typeOf shellHook == "string" then shellHook else shellHook.default or "";
+  shellName = if shell == "auto" then builtins.baseNameOf (builtins.getEnv "SHELL") else shell;
   wrapped = pkgs.writeShellScriptBin shellName (
     {
-      fishHook = ''
+      fish = ''
         INIT=/tmp/bigShellNix
         mkdir -p $INIT
 
         printf "%s\n" \
-          '${defaultHook}' \
-          '${shellHook.fish or ""}' \
+          '${shellHook}' \
+          '${fishHook}' \
         >$INIT/.fishrc
 
-        exec fish --init-command="source $INIT/.fishrc"
+        exec ${pkgs.fish}/bin/fish --init-command="source $INIT/.fishrc"
       '';
-      bashHook = ''
+      bash = ''
         INIT=/tmp/bigShellNix
         mkdir -p $INIT
 
         printf "%s\n" \
           "source $HOME/.bashrc" \
-          '${defaultHook}' \
-          '${shellHook.bash or ""}' \
+          '${shellHook}' \
+          '${bashHook}' \
         >$INIT/.bashrc
 
-        exec bash --init-file $INIT/.bashrc
+        exec ${pkgs.bashInteractive}/bin/bash --init-file $INIT/.bashrc
       '';
-      zshHook = ''
+      zsh = ''
         ZDOTDIR_=$ZDOTDIR
         if [[ -z "$ZDOTDIR_" ]]; then
           ZDOTDIR_=$HOME
@@ -54,17 +55,17 @@ let
         printf "%s\n" \
           "export ZDOTDIR=$ZDOTDIR_" \
           'source $ZDOTDIR/.zshrc' \
-          '${defaultHook}' \
-          '${shellHook.zsh or ""}' \
+          '${shellHook}' \
+          '${zshHook}' \
         >$ZDOTDIR/.zshrc
 
-        exec zsh
+        exec ${pkgs.zsh}/bin/zsh
       '';
+      "" = builtins.throw "shell not supported ${shellName}";
     }
-    ."${shellName}Hook"
+    .${shellName}
   );
   override = {
-    buildInputs = buildInputs ++ [ pkgs.${shellName} ];
     shellHook = ''
       export SHELL_NAME=${shellName}
       export SHELL=${wrapped}/bin/${shellName}
