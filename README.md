@@ -4,7 +4,7 @@ Bring your shell of choice to `mkShell` with a simple wrapper
 
 ## Basic Example
 
-````nix
+```nix
 {
   inputs = {
     utils.url = "github:numtide/flake-utils";
@@ -35,8 +35,8 @@ Bring your shell of choice to `mkShell` with a simple wrapper
         };
       }
     );
-}```
-````
+}
+```
 
 ## Advanced Example
 
@@ -66,3 +66,9 @@ Bring your shell of choice to `mkShell` with a simple wrapper
   };
 }
 ```
+
+### why not [use flake from direnv](https://direnv.net/man/direnv-stdlib.1.html#codeuse-flake-ltinstallablegtcode)
+
+`direnv` only exports and clears environment variables,
+it'll not work for more advanced shell features like in the example above,
+I still use `direnv` to manage my secrets and environment variables
