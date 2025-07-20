@@ -25,18 +25,25 @@
         formatter = pkgs.nixfmt-tree;
         devShell = bigShell.mkShell {
           inherit pkgs;
-          shell = "fish";
+          shell = "fish"; # use "auto" to impure read from $SHELL
           buildInputs = with pkgs; [
-            yarn
-            postgresql
             fnm
-            awscli2
             direnv
-            # _1password-cli  #only works with tty login
           ];
-          shellHook = ''
-            fnm env --use-on-cd --shell fish --corepack-enabled | source
-          '';
+          shellHook = {
+            default = ''
+              echo "using $SHELL_NAME"
+            '';
+            bash = ''
+              eval "$(fnm env --use-on-cd --shell bash)"
+            '';
+            zsh = ''
+              eval "$(fnm env --use-on-cd --shell zsh)"
+            '';
+            fish = ''
+              fnm env --use-on-cd --shell fish | source
+            '';
+          };
         };
       }
     );

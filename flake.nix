@@ -17,7 +17,7 @@
           formatter = pkgs.nixfmt-tree;
           devShell = bigShell {
             inherit pkgs;
-            shell = "bash";
+            shell = "auto";
           };
         }
       );
