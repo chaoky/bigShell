@@ -17,7 +17,7 @@
           inherit pkgs;
           shell = "bash";
         };
-        packages = {
+        lib = {
           default = bigShell;
           mkShell = bigShell;
         };
