@@ -95,3 +95,8 @@ nix_flake_cd() {
 autoload -U add-zsh-hook
 add-zsh-hook chpwd nix_flake_cd && nix_flake_cd
 ```
+
+### todo
+- support more sheels
+- add shell hooks for popular packages
+- introduce an auto shell enter similar to dirven
