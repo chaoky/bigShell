@@ -29,7 +29,7 @@ let
           '${fishHook}' \
         >$INIT/.fishrc
 
-        exec ${pkgs.fish}/bin/fish --init-command="source $INIT/.fishrc"
+        exec ${pkgs.fish}/bin/fish --init-command="source $INIT/.fishrc" "$@"
       '';
       bash = ''
         INIT=/tmp/bigShellNix
@@ -41,7 +41,7 @@ let
           '${bashHook}' \
         >$INIT/.bashrc
 
-        exec ${pkgs.bashInteractive}/bin/bash --init-file $INIT/.bashrc
+        exec ${pkgs.bashInteractive}/bin/bash --init-file $INIT/.bashrc "$@"
       '';
       zsh = ''
         ZDOTDIR_=$ZDOTDIR
@@ -59,7 +59,7 @@ let
           '${zshHook}' \
         >$ZDOTDIR/.zshrc
 
-        exec ${pkgs.zsh}/bin/zsh
+        exec ${pkgs.zsh}/bin/zsh "$@"
       '';
       "" = builtins.throw "shell not supported ${shellName}";
     }
